@@ -6,9 +6,10 @@ var AWS = require('aws-sdk');
 var webshot = require('webshot');
 var os = require('os');
 var ostemp = os.tmpdir();
+var amazon = require('../config/amazon_key')
 
 // move to proper config file
-AWS.config.update({accessKeyId: "AKIAJNM4N33ZSXQ4Q7TQ", secretAccessKey: "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"});
+AWS.config.update(amazon.key);
 
 // GET home page.
 exports.index = function(req, res){
