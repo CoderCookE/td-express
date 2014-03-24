@@ -4,7 +4,7 @@
  */
 
 exports.index = function(req, res){
-  res.render('index', { title: 'Express' });
+  res.render('index', { title: 'Test-Driven Design' });
 };
 
 exports.create = function(req, res){
@@ -12,5 +12,11 @@ exports.create = function(req, res){
 };
 
 exports.run_test = function(req, res){
-  res.send(200);
+  var link = req.body.link;
+  var file = req.body.file;
+
+  console.log(link);
+  console.log(file);
+
+  res.render('show_test', { link: link, file: file });
 }
