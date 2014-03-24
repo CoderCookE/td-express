@@ -16,4 +16,13 @@
       </div>
     </div>
   </div>
+
+<br>
+<br>
+{% if link %}
+<h4>URL tested: <a href="{{link}}">{{link}}</a></h4>
+<h4>File uploaded: <strong>{{file}}</strong></h4>
+{% endif %}
+
 {% endblock %}
+
