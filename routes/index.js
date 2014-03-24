@@ -4,12 +4,12 @@ var phantom= require('node-phantom');
 var PNG = require('pngjs').PNG;
 var AWS = require('aws-sdk');
 var webshot = require('webshot');
+var request = require('request');
 var os = require('os');
 var ostemp = os.tmpdir();
-var amazon = require('../config/amazon_key')
 
 // move to proper config file
-AWS.config.update(amazon.key);
+AWS.config.update({accessKeyId: "AKIAJNM4N33ZSXQ4Q7TQ", secretAccessKey: "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"});
 
 // GET home page.
 exports.index = function(req, res){
@@ -27,6 +27,9 @@ exports.run_test = function(req, res){
 	// temporary id number generator
 	var testid = new Date().valueOf();
 
+	// set screenshot file name
+	var screenshotName = testid + '-ss.png';
+
 	var link = req.body.link;
 	var file = req.files.file;
 
@@ -37,6 +40,9 @@ exports.run_test = function(req, res){
 	fileRename[0] = testid;
 	file.name = fileRename.join('.');
 
+	var linkUrl = 'http://s3.amazonaws.com/screenshotsfp/' + screenshotName;
+	var fileUrl = 'http://s3.amazonaws.com/screenshotsfp/' + file.name;
+
 	// upload user file to s3
 	fs.readFile(filePath, function(err, data) {
 		if (err) { throw err; }
@@ -45,13 +51,8 @@ exports.run_test = function(req, res){
 			Body: data
 		}, function() {
 			console.log('UPLOADED');
-		});
-	});
 
-	// set screenshot file name
-	var screenshotName = testid + '-ss.png';
-
-	// upload screenshot to s3
+				// upload screenshot to s3
 	webshot(link, ostemp + screenshotName, function(err) {
 		fs.readFile(ostemp + screenshotName, function(err, data) {
 			if (err) { throw err; }
@@ -60,56 +61,56 @@ exports.run_test = function(req, res){
 				Body: data
 			}, function() {
 				console.log('UPLOADED');
+				var percentage = runTests(linkUrl, fileUrl);
+				res.render('show_test', { linkUrl: linkUrl, fileUrl: fileUrl, percentage: percentage});
 			});
 		});
 	});
 
-	var linkUrl = 'http://s3.amazonaws.com/screenshotsfp/' + screenshotName;
-	var fileUrl = 'http://s3.amazonaws.com/screenshotsfp/' + file.name;
-
-  // fs.createReadStream('/Users/ericcook/Dropbox/Fullstack/MyPrograms/imagecompare/puppy1.png')
-  //     .pipe(new PNG({
-  //         filterType: 4
-  //     }))
-  //     .on('parsed', function() {
-  //     var data1 = this;
-  //     fs.createReadStream('/Users/ericcook/Dropbox/Fullstack/MyPrograms/imagecompare/puppy2.png')
-  //     .pipe(new PNG({
-  //         filterType: 4
-  //   }))
-  //     .on('parsed', function() {
-  //     var data2 = this;
-  //     var totalPixels = data1.height * data1.width;
-  //     console.log(data1.height + "," + data1.width);
-
-  //     var differenceCount = 0;
-  //         for (var y = 0; y < data1.height; y++) {
-  //             for (var x = 0; x < data1.width; x++) {
-  //                 var idx = (data1.width * y + x) << 2;
-
-  //     // if(data2.data[idx] === 255 && data2.data[idx+1] === 255 && data2.data[idx+2] === 255){
-  //     // data2.data[idx] = 1;
-  //             //    data2.data[idx+1] = 1;
-  //             //    data2.data[idx+2] = 1;
-  //     // }
-
-  //     if((data1.data[idx] !== data2.data[idx] || data1.data[idx+1] !== data2.data[idx+1] || data1.data[idx+2] !== data2.data[idx+2])){
-  //     differenceCount++;
-  //               data2.data[idx] =  data2.data[idx] + 255
-  //                 data2.data[idx+1] = 255 - data2.data[idx+1];
-  //                 data2.data[idx+2] = 255 - data2.data[idx+2];
-  //                 }
-  //             }
-  //         }
-
-  //     var results = "These pictures " + ((1 - (differenceCount/totalPixels)) *100) + "% the same";
-  //     console.log("These pictures " + ((1 - (differenceCount/totalPixels)) *100) + "% the same")
-
-  //     this.pack().pipe(fs.createWriteStream('out.png'));
-  //     });
-  //   });
-
-
-  res.render('show_test', { linkUrl: linkUrl, fileUrl: fileUrl});
+		});
+	});
 };
 
+var runTests = function(linkURL, fileURL){
+	request.get({url: fileURL, encoding: 'binary'}, function(err, response, body){
+		fs.writeFile(os.tmpdir()+'/image.png', body, 'binary', function(err){
+			fs.createReadStream(os.tmpdir()+'/image.png')
+	    .pipe(new PNG({
+	        filterType: 4
+	    }))
+	    .on('parsed', function() {
+	    	var data1 = this;
+	    	request.get({url: linkURL, encoding: 'binary'}, function(err, response, body){
+					fs.writeFile(os.tmpdir()+'/image.png', body, 'binary', function(err){
+		    	fs.createReadStream(os.tmpdir()+'/image.png')
+		    	.pipe(new PNG({
+		        filterType: 4
+		   		 }))
+		    	.on('parsed', function() {
+		    		var data2 = this;
+		    		var totalPixels = data1.height * data1.width;
+		    		console.log(data1.height + "," + data1.width);
+
+		    		var differenceCount = 0;
+		        for (var y = 0; y < data1.height; y++) {
+		            for (var x = 0; x < data1.width; x++) {
+		                var idx = (data1.width * y + x) << 2;
+		     						if((data1.data[idx] !== data2.data[idx] || data1.data[idx+1] !== data2.data[idx+1] || data1.data[idx+2] !== data2.data[idx+2])){
+		     								differenceCount++;
+		               			data2.data[idx] =  data2.data[idx] + 255;
+		                		data2.data[idx+1] = 255 - data2.data[idx+1];
+		                		data2.data[idx+2] = 255 - data2.data[idx+2];
+		                }
+		            }
+		        }
+						console.log("These pictures " + ((1 - (differenceCount/totalPixels)) *100) + "% the same")
+						this.pack().pipe(fs.createWriteStream('out.png'));
+						return ((1 - (differenceCount/totalPixels)) *100);
+
+						});
+					});
+	    	});
+	    });
+		})
+	})
+}
