@@ -1,7 +1,7 @@
 {
   "name": "td-express",
   "description": "TDD takes a screenshot of a website and compares it to the designer's original specs.",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "private": true,
   "repository": {
     "type": "git",

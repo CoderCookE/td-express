@@ -1,8 +1,3 @@
-
-/**
- * Module dependencies.
- */
-
 var express = require('express');
 var swig    = require('swig');
 var routes  = require('./routes');
@@ -32,6 +27,7 @@ if ('development' == app.get('env')) {
   swig.setDefaults({ cache: false });
 }
 
+// routes ===========
 app.get('/', routes.index);
 app.get('/test', routes.create);
 app.post('/run_test', routes.run_test);
