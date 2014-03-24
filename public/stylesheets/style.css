@@ -1,19 +1,19 @@
 body {
   padding: 50px;
   font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
-  background-color: #EEEEEE;
+  background: #fefefe url('../images/bg.png') repeat;
 }
 
 a {
-  color: #00B7FF;
+  color: #00b7ff;
 }
 
 #green:hover {
-  color: #00CC00;
+  color: #00cc00;
 }
 
 #red:hover {
-  color: #FF0000;
+  color: #ff0000;
 }
 
 #footer {
