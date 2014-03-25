@@ -1,6 +1,8 @@
 # TD-Express v0.2.1
 
-**TD-Express** is a Test-driven Design app that allows designers to compare live or local websites to original mock-ups. TDD uses a headless browser to take a screenshot and compares the screenshot to the designer's original specs.
+**TD-Express** is a Test-driven Design app that allows designers to compare live or local websites to original mock-ups. TDD screenshots the website with a headless browser and compares the image to the designer's original specs. Discrepancies are detected down to the last byte, and any differences are highlighted in red.
+
+Accurate. Fast. Reliable. Test-driven Design.
 
 Built on the Express framework.
 

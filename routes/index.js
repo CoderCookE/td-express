@@ -1,6 +1,6 @@
 var fs = require('fs');
-var pngparse = require("pngparse");
-var phantom= require('node-phantom');
+var pngparse = require('pngparse');
+var phantom = require('node-phantom');
 var PNG = require('pngjs').PNG;
 var AWS = require('aws-sdk');
 var webshot = require('webshot');
@@ -8,7 +8,6 @@ var request = require('request');
 var os = require('os');
 var ostemp = os.tmpdir();
 
-// move to proper config file
 
 // GET home page.
 exports.index = function(req, res){
@@ -45,11 +44,11 @@ exports.run_test = function(req, res){
 	// upload user file to s3
 	fs.readFile(filePath, function(err, data) {
 		if (err) { throw err; }
-		var s3 = new AWS.S3({ params: {Bucket: 'screenshotsfp', Key: file.name }});
+		var s3 = new AWS.S3({ params: {Bucket: 'screenshotsfp', Key: file.name} });
 		s3.putObject({
 			Body: data
 		}, function() {
-			console.log('UPLOADED');
+			console.log('uploaded ' + file.name);
 
 			var options = {
 				screenSize: {
@@ -66,11 +65,11 @@ exports.run_test = function(req, res){
 			webshot(link, ostemp + screenshotName, options, function(err) {
 				fs.readFile(ostemp + screenshotName, options, function(err, data) {
 					if (err) { throw err; }
-					var s3 = new AWS.S3({ params: { Bucket: 'screenshotsfp', Key: screenshotName }});
+					var s3 = new AWS.S3({ params: {Bucket: 'screenshotsfp', Key: screenshotName} });
 					s3.putObject({
 						Body: data
 					}, function() {
-						console.log('UPLOADED');
+						console.log('uploaded ' + screenshotName);
 						runTests(linkUrl, fileUrl, testid, res);
 					});
 				});
@@ -114,7 +113,6 @@ var runTests = function(linkURL, fileURL, testid, res){
 		        }
 						console.log("These pictures " + ((1 - (differenceCount/totalPixels)) *100) + "% the same")
 
-
 						var r = this.pack().pipe(fs.createWriteStream(os.tmpdir()+'out.png'));
 
 						r.on('close', function(){
@@ -124,10 +122,10 @@ var runTests = function(linkURL, fileURL, testid, res){
 								s3.putObject({
 									Body: data
 								}, function() {
-									console.log('UPLOADED');
+									console.log('uploaded ' + testid);
 
 							var percentage = ((1 - (differenceCount/totalPixels)) *100);
-							res.render('show_test', { linkUrl: linkURL, fileUrl: fileURL, percentage: percentage, outUrl:'http://s3.amazonaws.com/screenshotsfp/'+ testid +'-out.png'});
+							res.render('show_test', { linkUrl: linkURL, fileUrl: fileURL, percentage: percentage, outUrl:'http://s3.amazonaws.com/screenshotsfp/'+ testid +'-out.png' });
 									});
 							});
 						})
