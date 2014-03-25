@@ -111,14 +111,14 @@ var runTests = function(linkURL, fileURL,testid,res,){
 						r.on('close', function(){
 								fs.readFile(os.tmpdir()+'out.png', function(err, data) {
 								if (err) { throw err; }
-								var s3 = new AWS.S3({ params: {Bucket: 'screenshotsfp', Key: testid+'out.png' }});
+								var s3 = new AWS.S3({ params: {Bucket: 'screenshotsfp', Key: testid+'-out.png' }});
 								s3.putObject({
 									Body: data
 								}, function() {
 									console.log('UPLOADED');
 
 							var percentage = ((1 - (differenceCount/totalPixels)) *100);
-							res.render('show_test', { linkUrl: linkURL, fileUrl: fileURL, percentage: percentage, outUrl:'http://s3.amazonaws.com/screenshotsfp/'+ testid +'out.png'});
+							res.render('show_test', { linkUrl: linkURL, fileUrl: fileURL, percentage: percentage, outUrl:'http://s3.amazonaws.com/screenshotsfp/'+ testid +'-out.png'});
 									});
 							});
 						})
