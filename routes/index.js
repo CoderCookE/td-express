@@ -71,7 +71,7 @@ exports.run_test = function(req, res){
 	});
 };
 
-var runTests = function(linkURL, fileURL,testid,res,){
+var runTests = function(linkURL, fileURL,testid,res){
 	request.get({url: fileURL, encoding: 'binary'}, function(err, response, body){
 		fs.writeFile(os.tmpdir()+'/image.png', body, 'binary', function(err){
 			fs.createReadStream(os.tmpdir()+'/image.png')
