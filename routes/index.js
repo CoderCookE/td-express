@@ -58,6 +58,10 @@ exports.run_test = function(req, res){
 				shotSize: {
 					width: req.body.width,
 					height: req.body.height
+				},
+				windowSize: {
+					width: req.body.width,
+					height: req.body.height
 				}
 			};
 
