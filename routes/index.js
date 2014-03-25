@@ -9,7 +9,6 @@ var os = require('os');
 var ostemp = os.tmpdir();
 
 // move to proper config file
-AWS.config.update({accessKeyId: "AKIAJNM4N33ZSXQ4Q7TQ", secretAccessKey: "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"});
 
 // GET home page.
 exports.index = function(req, res){
@@ -52,20 +51,31 @@ exports.run_test = function(req, res){
 		}, function() {
 			console.log('UPLOADED');
 
-				// upload screenshot to s3
-	webshot(link, ostemp + screenshotName, function(err) {
-		fs.readFile(ostemp + screenshotName, function(err, data) {
-			if (err) { throw err; }
-			var s3 = new AWS.S3({ params: {Bucket: 'screenshotsfp', Key: screenshotName }});
-			s3.putObject({
-				Body: data
-			}, function() {
-				console.log('UPLOADED');
-				runTests(linkUrl, fileUrl, testid, res);
+			var options = {
+				screenSize: {
+					width: req.body.width,
+					height: req.body.height
+				},
+				shotSize: {
+					width: req.body.width,
+					height: req.body.height
+				}
+			};
 
+			// upload screenshot to s3
+			webshot(link, ostemp + screenshotName, options, function(err) {
+				fs.readFile(ostemp + screenshotName, options, function(err, data) {
+					if (err) { throw err; }
+					var s3 = new AWS.S3({ params: {Bucket: 'screenshotsfp', Key: screenshotName }});
+					s3.putObject({
+						Body: data
+					}, function() {
+						console.log('UPLOADED');
+						runTests(linkUrl, fileUrl, testid, res);
+
+					});
+				});
 			});
-		});
-	});
 
 		});
 	});
