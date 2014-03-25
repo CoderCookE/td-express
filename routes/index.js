@@ -61,7 +61,7 @@ exports.run_test = function(req, res){
 				Body: data
 			}, function() {
 				console.log('UPLOADED');
-				runTests(linkUrl, fileUrl, res);
+				runTests(linkUrl, fileUrl, testid, res);
 
 			});
 		});
@@ -71,7 +71,7 @@ exports.run_test = function(req, res){
 	});
 };
 
-var runTests = function(linkURL, fileURL,res){
+var runTests = function(linkURL, fileURL,testid,res,){
 	request.get({url: fileURL, encoding: 'binary'}, function(err, response, body){
 		fs.writeFile(os.tmpdir()+'/image.png', body, 'binary', function(err){
 			fs.createReadStream(os.tmpdir()+'/image.png')
@@ -111,14 +111,14 @@ var runTests = function(linkURL, fileURL,res){
 						r.on('close', function(){
 								fs.readFile(os.tmpdir()+'out.png', function(err, data) {
 								if (err) { throw err; }
-								var s3 = new AWS.S3({ params: {Bucket: 'screenshotsfp', Key: 'out.png' }});
+								var s3 = new AWS.S3({ params: {Bucket: 'screenshotsfp', Key: testid+'out.png' }});
 								s3.putObject({
 									Body: data
 								}, function() {
 									console.log('UPLOADED');
 
 							var percentage = ((1 - (differenceCount/totalPixels)) *100);
-							res.render('show_test', { linkUrl: linkURL, fileUrl: fileURL, percentage: percentage, outUrl:'http://s3.amazonaws.com/screenshotsfp/out.png'});
+							res.render('show_test', { linkUrl: linkURL, fileUrl: fileURL, percentage: percentage, outUrl:'http://s3.amazonaws.com/screenshotsfp/'+ testid +'out.png'});
 									});
 							});
 						})
