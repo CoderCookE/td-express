@@ -3,12 +3,20 @@
     <h4>Guidelines for uploading</h4>
     <ul>
       <li>Enter the URL address of the website you wish to test.</li>
+      <br>
+      <li>Input dimensions for the screenshot so they match local file dimensions.</li>
+      <small>WARNING: Failure to select proper dimensions will cause inaccurate results!</small>
+      <br>
+      <br>
       <li>Upload the original design specs via a local file.</li>
+      <br>
       <li>Press submit to get results.</li>
     </ul>
   </div>
 
   <div class="col-md-6">
+    <br>
+    <br>
     <form class="form-horizontal" role="form" action="/run_test" method="post" enctype="multipart/form-data">
       <div class="form-group">
         <label for="link" class="col-sm-2 control-label">URL</label>
@@ -18,7 +26,19 @@
       </div>
 
       <div class="form-group">
-        <br>
+        <label for="width" class="col-sm-2 control-label">Dimensions</label>
+        <div class="col-md-3">
+          <input type="text" class="form-control" name="width" id="width" placeholder="width" required>
+        </div>
+
+
+        <div class="col-md-3">
+          <input type="text" class="form-control" name="height" id="height" placeholder="height" required>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <hr>
         <label for="file" class="col-sm-2 control-label">local file</label>
         <div class="col-md-6">
           <input type="file" class="form-control" name="file" id="file" placeholder="Select local file to upload..." required>
