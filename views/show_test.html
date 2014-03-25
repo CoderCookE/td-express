@@ -19,10 +19,13 @@
 
 <br>
 <br>
-{% if link %}
-<h4>URL tested: <a href="{{link}}">{{link}}</a></h4>
-<h4>File uploaded: <strong>{{file}}</strong></h4>
-<h4>Message: {{message}}</h4>
+{% if linkUrl %}
+<h4>URL tested: <a href="{{linkUrl}}">{{linkUrl}}</a></h4>
+<img src = "{{linkUrl}}"></img>
+<h4>File uploaded: <a href="{{fileUrl}}">{{fileUrl}}</a></h4>
+<img src = "{{fileUrl}}"></img>
+<h4>Percentage: These images are {{percentage}}% similar.</h4>
+<img src = "{{outUrl}}"></img>
 {% endif %}
 
 {% endblock %}
