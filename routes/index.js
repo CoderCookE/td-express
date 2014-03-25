@@ -41,6 +41,14 @@ exports.run_test = function(req, res){
 	var linkUrl = 'http://s3.amazonaws.com/screenshotsfp/' + screenshotName;
 	var fileUrl = 'http://s3.amazonaws.com/screenshotsfp/' + file.name;
 
+	fs.createReadStream(filePath)
+    .pipe(new PNG({
+        filterType: 4
+    }))
+    .on('parsed', function() {
+    	var heightToUse = this.height;
+    	var widthToUse = this.width;
+
 	// upload user file to s3
 	fs.readFile(filePath, function(err, data) {
 		if (err) { throw err; }
@@ -52,16 +60,16 @@ exports.run_test = function(req, res){
 
 			var options = {
 				screenSize: {
-					width: req.body.width,
-					height: req.body.height
+					width: widthToUse,
+					height: heightToUse
 				},
 				shotSize: {
-					width: req.body.width,
-					height: req.body.height
+					width: widthToUse,
+					height: heightToUse
 				},
 				windowSize: {
-					width: req.body.width,
-					height: req.body.height
+					width: widthToUse,
+					height: heightToUse
 				}
 			};
 
@@ -81,6 +89,9 @@ exports.run_test = function(req, res){
 
 		});
 	});
+
+
+    });
 };
 
 var runTests = function(linkURL, fileURL, testid, res){
