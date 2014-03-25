@@ -8,6 +8,16 @@ a {
   color: #00b7ff;
 }
 
+h4 {
+	text-align: center;
+}
+
+.preview {
+	width: 100%;
+	height: auto;
+	vertical-align: center;
+}
+
 #green:hover {
   color: #00cc00;
 }
