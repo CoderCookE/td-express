@@ -116,11 +116,11 @@ var runTests = function(linkURL, fileURL,res){
 									Body: data
 								}, function() {
 									console.log('UPLOADED');
-									});
-							});
 
 							var percentage = ((1 - (differenceCount/totalPixels)) *100);
 							res.render('show_test', { linkUrl: linkURL, fileUrl: fileURL, percentage: percentage, outUrl:'http://s3.amazonaws.com/screenshotsfp/out.png'});
+									});
+							});
 						})
 
 
