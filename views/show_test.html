@@ -6,6 +6,25 @@
 {% block pageheader %}Test complete{% endblock %}
 
 {% block content %}
+<br>
+<br>
+{% if linkUrl %}
+<div class = "row">
+		<div class = "col-md-6">
+		<h4>URL tested:</h4>
+		<img class = "preview" src = "{{linkUrl}}"></img>
+		</div>
+		<div class = "col-md-6">
+			<h4>File uploaded:</h4>
+			<img class = "preview" src = "{{fileUrl}}"></img>
+	</div>
+</div>
+	<div>
+<h4>These images are {{percentage}}% similar.</h4>
+<img class = "preview" src = "{{outUrl}}"></img>
+</div>
+
+	<br>
   <div class="row">
     <div class="col-md-offset-3 col-md-6" ng-show="showTest">
       <div class="well">
@@ -16,16 +35,6 @@
       </div>
     </div>
   </div>
-
-<br>
-<br>
-{% if linkUrl %}
-<h4>URL tested: <a href="{{linkUrl}}">{{linkUrl}}</a></h4>
-<img src = "{{linkUrl}}"></img>
-<h4>File uploaded: <a href="{{fileUrl}}">{{fileUrl}}</a></h4>
-<img src = "{{fileUrl}}"></img>
-<h4>Percentage: These images are {{percentage}}% similar.</h4>
-<img src = "{{outUrl}}"></img>
 {% endif %}
 
 {% endblock %}
